@@ -1,0 +1,27 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+
+# Project
+target/
+/null/
+/.checkstyle
+.eclipse-pmd
+.settings/org.springframework.ide.eclipse.prefs
+git.properties
+/logs/
+/${sys:myserver.writable.root.dir}/
