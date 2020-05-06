@@ -1,18 +1,6 @@
-Copyright © 2020 BlackRock Inc.
+# Lib-Kafka-OAuth
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-## Lib-Kafka-OAuth
+[logo]: https://https://avatars3.githubusercontent.com/u/64902484?s=400&u=1dcba824aa6a9860b7e40d5e1ebe0e9c888f9bfc&v=4
 
 The purpose of the library is to improve the out of box Kafka security features, by providing concrete OAuth2 implementation of authentication and authorization for Kafka based on Kafka OAuth Security Framework.  
 The library utilizes KeyCloak as the OAuth server, but other OAuth servers could be used.
@@ -70,9 +58,23 @@ Contributions are welcomed! Read the [Contributing Guide](./CONTRIBUTING.md) for
 
 ### Licensing
 
-This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
+See [LICENSE](LICENSE) for more information.
 
-This project was inspired by: 
-    https://github.com/jairsjunior/kafka-oauth
+Copyright © 2020 BlackRock Inc.
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+### Credits
+
+This project was inspired by:
+-  https://github.com/jairsjunior/kafka-oauth
