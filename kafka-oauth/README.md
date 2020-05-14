@@ -105,20 +105,3 @@ limitations under the License.
         bin\windows\kafka-server-start.bat config\server.properties
     
     
-#### Alpha: ACLs for Custom Authorizer
-- Download CLI from https://blade-git.blackrock.com/cachematrix/lib-kafka-oauth-cli
-- Add JAR to {KAFKA_DIRECTORY}\config\lib\
-- Go to {KAFKA_DIRECTORY}\bin\windows\kafka-acls.bat
-- Change the command to use folllowing Java class:
-    
-
-        com.bfm.kafka.security.oauthbearer.CustomAclCLI
-
-- Save the file.
-
-
-    Example command to add a the scope "urn:kafka:topic:test:read" to the kafka-broker client:
-    
-        bin\windows\kafka-acls --add --resourceName test --resourceType topic --operation read --clientId kafka-broker --adminId kafka-admin --adminSecret t3453b-57e7-49a9-847a-grg4ttrg --serverUrl http://localhost:8080 --realm cm-dev-kafka --ssl false
-    
-    
