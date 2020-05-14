@@ -89,7 +89,7 @@ limitations under the License.
 
 ## Run Kafka with OAuth
 - Open two CMD windows to run the zookeeper and broker
-    - Run the Zokeeper
+    - Run the Zookeeper
     
     ---
     
