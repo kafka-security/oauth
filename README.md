@@ -5,6 +5,8 @@
 The purpose of the library is to improve the out of box Kafka security features, by providing concrete OAuth2 implementation of authentication and authorization for Kafka based on Kafka OAuth Security Framework.  
 The library utilizes KeyCloak as the OAuth server, but other OAuth servers could be used.
 
+Learn more [here](https://medium.com/blackrock-engineering/utilizing-oauth-for-kafka-security-5c1da9f3d3d).
+
 ## Goals
 
 - Modern industry standard – ability to expire/refresh credentials for long running processes without downtime
