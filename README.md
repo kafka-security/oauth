@@ -56,11 +56,11 @@ Contributions are welcomed! Read the [Contributing Guide](./CONTRIBUTING.md) for
 
 ### Contact Us
 
-- GitHub [Issue](./.github/.ISSUE_TEMPLATE/issue.md)
+- Create a GitHub [issue](https://github.com/kafka-security/oauth/issues/new)
 
 ### Licensing
 
-See [LICENSE](LICENSE) for more information.
+See [LICENSE](https://github.com/kafka-security/oauth/blob/master/LICENCE) for more information.
 
 Copyright © 2020 BlackRock Inc.
 
