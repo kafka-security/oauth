@@ -16,6 +16,7 @@ limitations under the License.
 package com.bfm.kafka.security.oauthbearer;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * This interface defines services from an OAuth Server that are needed for lib-kafka-oauth
@@ -43,4 +44,6 @@ public interface OAuthService {
      * @return the o auth configuration
      */
     OAuthConfiguration getOAuthConfiguration();
+
+    void setOAuthConfiguration(Map<String, String> jaasConfigEntries);
 }

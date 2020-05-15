@@ -66,6 +66,16 @@ public class OAuthServiceImpl implements OAuthService {
 		return this.oauthConfiguration;
 	}
 
+	@Override
+	public void setOAuthConfiguration(Map<String, String> jaasConfigEntries) {
+		try {
+			//validate parameters
+			Objects.requireNonNull(jaasConfigEntries);
+			this.oauthConfiguration.setConfigurationFromJaasConfigEntries(jaasConfigEntries);
+		} catch (RuntimeException e) {
+			log.warn("Error on trying to configure oauth using jaas configuration entries. Using environment or properties file configuration");
+		}
+	}
 
 	//endregion
 

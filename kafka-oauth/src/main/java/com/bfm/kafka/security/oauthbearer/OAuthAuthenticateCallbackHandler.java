@@ -128,6 +128,8 @@ public abstract class OAuthAuthenticateCallbackHandler<T> implements Authenticat
 			if (jaasConfigEntries.size() == 1 && jaasConfigEntries.get(0) != null) {
 				this.moduleOptions = Collections.unmodifiableMap(
 						(Map<String, String>) jaasConfigEntries.get(0).getOptions());
+				//Configure OAuthService using the JAAS file properties
+				this.oauthService.setOAuthConfiguration(moduleOptions);
 				// the handle has been configured
 				configured = true;
 			} else {
