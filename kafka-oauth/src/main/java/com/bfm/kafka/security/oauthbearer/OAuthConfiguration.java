@@ -22,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -319,6 +321,64 @@ public class OAuthConfiguration {
         }
 
         return true;
+    }
+
+    public void setConfigurationFromJaasConfigEntries(Map<String,String> jaasConfigEntries) {
+        //validate the parameters
+        Objects.requireNonNull(jaasConfigEntries);
+
+        // get the OAuth server base Uri
+        String defaultBaseServerUri = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_BASE_URI, "");
+        if (!Utils.isNullOrEmpty(defaultBaseServerUri)) {
+            this.baseServerUri = defaultBaseServerUri;
+        }
+
+        // get the OAuth server token path
+        String defaultTokenEndpointPath = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_TOKEN_ENDPOINT_PATH, "");
+        if (!Utils.isNullOrEmpty(defaultTokenEndpointPath)) {
+            this.tokenEndpointPath = defaultTokenEndpointPath;
+        }
+
+        // get the OAuth server introspection endpoint path
+        String defaultIntrospectionEndpointPath = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_INTROSPECTION_ENDPOINT_PATH, "");
+        if (!Utils.isNullOrEmpty(defaultIntrospectionEndpointPath)) {
+            this.introspectionEndpointPath = defaultIntrospectionEndpointPath;
+        }
+
+        // get the OAuth server client id
+        String defaultClientId = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_CLIENT_ID, "");
+        if (!Utils.isNullOrEmpty(defaultClientId)) {
+            this.clientId = defaultClientId;
+        }
+
+        // get the OAuth server client secret
+        String defaultClientSecret = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_CLIENT_SECRET, "");
+        if (!Utils.isNullOrEmpty(defaultClientSecret)) {
+            this.clientSecret = defaultClientSecret;
+        }
+
+        // get the OAuth server grant type
+        String defaultGrantType = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_GRANT_TYPE, "");
+        if (!Utils.isNullOrEmpty(defaultGrantType)) {
+            this.grantType = defaultGrantType;
+        }
+
+        // get the OAuth server scopes
+        String defaultScopes = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_SCOPES, "");
+        if (!Utils.isNullOrEmpty(defaultScopes)) {
+            this.scopes = defaultScopes;
+        }
+
+        // get the OAuth server unsecure server
+        String defaultUnsecureServer = jaasConfigEntries.getOrDefault(KAFKA_OAUTH_SERVER_ACCEPT_UNSECURE_SERVER, "");
+        if (!Utils.isNullOrEmpty(defaultUnsecureServer)) {
+            this.unsecureServer = Boolean.valueOf(defaultUnsecureServer);
+        }
+
+        //check if the configuration remains valid
+        if (!this.isValid()) {
+            throw new IllegalStateException("Configuration entries at jaas configuration file are invalid.");
+        }
     }
 
     //endregion

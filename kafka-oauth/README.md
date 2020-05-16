@@ -27,8 +27,9 @@ limitations under the License.
 #### Config Files
 - Create a properties file for your Broker OAuth client {broker-configuration.properties}.
 - The file should contain the following properties:
-- NOTE: you will need to update the oauth.server.client.secret to be your client secret!!!!!
-
+- NOTES: 
+    - you will need to update the oauth.server.client.secret to be your client secret!!!!!
+    - you can pass this properties under the kafka_server_jaas.conf
 
         oauth.server.base.uri=http://localhost:8080/auth/realms/master/protocol/openid-connect
         oauth.server.token.endpoint.path=/token
@@ -43,10 +44,18 @@ limitations under the License.
 
 - Create a config file for your JAAS security {kafka_server_jaas.conf}
     - The file must contain the following:
-
+    - NOTE: the properties started by oauth.server only needed if you don't want to user the broker-configuration.properties file!
     
             KafkaServer {
-                org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;
+                org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required 
+                oauth.server.base.uri="http://localhost:8080/auth/realms/master/protocol/openid-connect"
+                oauth.server.token.endpoint.path="/token"
+                oauth.server.introspection.endpoint.path="/token/introspect"
+                oauth.server.client.id="kafka-broker"
+                oauth.server.client.secret="4ce54cfb-f359-4400-bd8e-810a1af10f71"
+                oauth.server.grant.type="client_credentials"
+                oauth.server.scopes="test"
+                oauth.server.accept.unsecure.server="true";
             };
 
 
