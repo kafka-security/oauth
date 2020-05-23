@@ -19,23 +19,32 @@ import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.security.auth.AuthenticationContext;
 import org.apache.kafka.common.security.auth.KafkaPrincipalBuilder;
 import org.apache.kafka.common.security.auth.SaslAuthenticationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The type Custom principal builder.
  */
 public class CustomPrincipalBuilder implements KafkaPrincipalBuilder {
+
+	private final Logger log = LoggerFactory.getLogger(CustomPrincipalBuilder.class);
+
 	@Override
 	public CustomPrincipal build(AuthenticationContext authenticationContext) throws KafkaException{
 		try {
 			CustomPrincipal customPrincipal;
 
 			if (authenticationContext instanceof SaslAuthenticationContext) {
+				log.info("Is instance of SaslAuthenticationContext");
 				SaslAuthenticationContext context = (SaslAuthenticationContext) authenticationContext;
+				log.info("Print content of context!");
+				log.info(context.server().toString());
 				OAuthBearerTokenJwt token = (OAuthBearerTokenJwt) context.server()
 						.getNegotiatedProperty("OAUTHBEARER.token");
 
 				customPrincipal = new CustomPrincipal("User", token.principalName());
 				customPrincipal.setOauthBearerTokenJwt(token);
+				log.info("TOKEN:" + token.toString());
 
 				return customPrincipal;
 			} else {

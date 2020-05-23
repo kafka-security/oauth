@@ -31,15 +31,17 @@ limitations under the License.
     - you will need to update the oauth.server.client.secret to be your client secret!!!!!
     - you can pass this properties under the kafka_server_jaas.conf
 
-        oauth.server.base.uri=http://localhost:8080/auth/realms/master/protocol/openid-connect
-        oauth.server.token.endpoint.path=/token
-        oauth.server.introspection.endpoint.path=/token/introspect
-        oauth.server.client.id=kafka-broker
-        oauth.server.client.secret=4ce54cfb-f359-4400-bd8e-810a1af10f71
-        oauth.server.grant.type=client_credentials
-        oauth.server.scopes=test
-        oauth.server.accept.unsecure.server=true
-         # oauth.server.accept.unsecure.server - this propertie is for SSL configuration, if you are using HTTP or a self-signed CERT set this true
+```
+    oauth.server.base.uri=http://localhost:8080/auth/realms/master/protocol/openid-connect
+    oauth.server.token.endpoint.path=/token
+    oauth.server.introspection.endpoint.path=/token/introspect
+    oauth.server.client.id=kafka-broker
+    oauth.server.client.secret=4ce54cfb-f359-4400-bd8e-810a1af10f71
+    oauth.server.grant.type=client_credentials
+    oauth.server.scopes=test
+    oauth.server.accept.unsecure.server=true
+    # oauth.server.accept.unsecure.server - this propertie is for SSL configuration, if you are using HTTP or a self-signed CERT set this true
+```
 
 
 - Create a config file for your JAAS security {kafka_server_jaas.conf}
