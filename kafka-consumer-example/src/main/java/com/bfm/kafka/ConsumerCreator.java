@@ -24,11 +24,14 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.util.Collections;
 import java.util.Properties;
 
+import com.bfm.kafka.security.oauthbearer.EnvironmentVariablesUtil;
+
 public class ConsumerCreator {
 
 	public static Consumer<Long, String> createConsumer() {
 		final Properties props = new Properties();
-		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, IKafkaConstants.KAFKA_BROKERS);
+		
+		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, EnvironmentVariablesUtil.getStringEnvironmentVariable("BOOTSTRAP_SERVERS", IKafkaConstants.KAFKA_BROKERS));
 		props.put(ConsumerConfig.CLIENT_ID_CONFIG, IKafkaConstants.CLIENT_ID);
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, IKafkaConstants.GROUP_ID_CONFIG);
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName());

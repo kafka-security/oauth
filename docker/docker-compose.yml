@@ -1,0 +1,104 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak-user
+      POSTGRES_PASSWORD: keycloak-pass
+  
+  auth:
+    image: quay.io/keycloak/keycloak:9.0.3
+    ports:
+      - 8080:8080
+    hostname: auth
+    container_name: auth
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak-user
+      DB_PASSWORD: keycloak-pass
+      KEYCLOAK_USER: keycloak
+      KEYCLOAK_PASSWORD: keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+      JAVA_OPTS: -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled -server -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true
+    depends_on:
+      - db
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.import=/opt/jboss/keycloak/kafka-realm.json"
+    volumes:
+      - ./keycloak/kafka-realm.json:/opt/jboss/keycloak/kafka-realm.json
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    hostname: zookeeper
+    container_name: zookeeper
+    depends_on: 
+      - auth
+    restart: always
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:5.3.1
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    restart: always
+    ports:
+      - 29092:29092
+      - 9092:9092
+      - 9093:9093
+    environment:
+      #BASE CONFLUENT ENVIRONMENTS
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      #KAFKA SASL SET HANDLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092,SASL_PLAINTEXT://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092,SASL_PLAINTEXT://broker:9093
+      KAFKA_LISTENER_NAME_SASL__PLAINTEXT_OAUTHBEARER_SASL_LOGIN_CALLBACK_HANDLER_CLASS: com.bfm.kafka.security.oauthbearer.OAuthAuthenticateLoginCallbackHandler
+      KAFKA_LISTENER_NAME_SASL__PLAINTEXT_OAUTHBEARER_SASL_SERVER_CALLBACK_HANDLER_CLASS: com.bfm.kafka.security.oauthbearer.OAuthAuthenticateValidatorCallbackHandler
+      KAFKA_SASL_ENABLED_MECHANISMS: OAUTHBEARER
+      KAFKA_CONNECTIONS_MAX_REAUTH_MS: 60000
+      #KAKFA JAAS CONFIGURATION FILE
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+      ZOOKEEPER_SASL_ENABLED: "FALSE"
+      #KAFKA INTERBROKER SECURITY
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=DEBUG,org.apache.kafka=DEBUG"
+      KAFKA_LOG4J_ROOT_LOGLEVEL: DEBUG
+      ############## Authorizer ######################
+      KAFKA_AUTHORIZER_CLASS_NAME: com.bfm.kafka.security.oauthbearer.CustomAuthorizer
+      KAFKA_PRINCIPAL_BUILDER_CLASS: com.bfm.kafka.security.oauthbearer.CustomPrincipalBuilder
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+      # Access denials are logged at INFO level, change to DEBUG to also log allowed accesses
+      KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: "DEBUG, authorizerAppender"
+      KAFKA_LOG4J_ADDITIVITY_KAFKA_AUTHORIZER_LOGGER: "false"
+    volumes:
+      - ./cp-kafka/dub.py:/usr/local/lib/python2.7/dist-packages/confluent/docker_utils/dub.py
+      - ./cp-kafka/kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ./cp-kafka/libkafka.oauthbearer-1.0.0.jar:/usr/share/java/kafka/libkafka.oauthbearer-1.0.0.jar
+  
+  consumer-example:
+    image: kafka-security/consumer-example
+    build: ./kafka-consumer-example
+    environment: 
+      BOOTSTRAP_SERVERS: broker:9093
+  
+  producer-example:
+    image: kafka-security/producer-example
+    build: ./kafka-producer-example
+    environment: 
+      BOOTSTRAP_SERVERS: broker:9093
+
